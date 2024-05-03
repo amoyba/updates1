@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download Update</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .success-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <button class="button" onclick="downloadUpdate()">Download Update</button>
+    <div id="successPopup" class="success-popup">
+        <p>Successfully downloaded updates!</p>
+    </div>
+
+    <script>
+        function downloadUpdate() {
+            // Replace 'caller_update.exe' with the actual file name and path
+            var fileUrl = 'updates/caller_setup.exe';
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', fileUrl, true);
+            xhr.responseType = 'blob';
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var blob = new Blob([xhr.response], { type: 'application/octet-stream' });
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'caller_update.exe';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    showSuccessPopup();
+                }
+            };
+
+            xhr.send();
+        }
+
+        function showSuccessPopup() {
+            var successPopup = document.getElementById('successPopup');
+            successPopup.style.display = 'block';
+            setTimeout(function() {
+                successPopup.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
